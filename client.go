@@ -259,7 +259,7 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 		return httpResp, err
 	}
 
-	if len(errorResponse.Message.Errors) > 0 {
+	if errorResponse.Err != nil {
 		return httpResp, errorResponse
 	}
 
@@ -359,7 +359,7 @@ func CheckResponse(r *http.Response) error {
 	// convert json to struct
 	err = json.Unmarshal(data, errorResponse)
 	if err != nil {
-		return err
+		return errorResponse
 	}
 
 	return errorResponse
@@ -369,77 +369,26 @@ type ErrorResponse struct {
 	// HTTP response that caused this error
 	Response *http.Response `json:"-"`
 
-	Message Message
+	Err *Error
 }
 
 func (r *ErrorResponse) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &r.Message)
+	r.Err = &Error{}
+	return json.Unmarshal(data, r.Err)
 }
 
-func (r *ErrorResponse) Error() string {
-	return r.Message.Error()
-}
-
-type Message struct {
-	Message        string  `json:"message"`
-	ErrorCode      string  `json:"errorCode"`
-	DeveloperHint  string  `json:"developerHint"`
-	LogID          string  `json:"logId"`
-	HTTPStatusCode int     `json:"httpStatusCode"`
-	Errors         []Error `json:"errors"`
-	LogTime        LogTime `json:"logTime"`
-	SchemaPath     URL     `json:"schemaPath"`
-}
-
-func (m Message) Error() string {
-	err := []string{}
-	for _, e := range m.Errors {
-		err = append(err, e.Error())
-	}
-
-	return strings.Join(err, ", ")
+func (r ErrorResponse) Error() string {
+	return r.Err.Error()
 }
 
 type Error struct {
-	PropertyName  string      `json:"propertyName"`
-	ErrorMessage  string      `json:"errorMessage"`
-	ErrorCode     string      `json:"errorCode"`
-	InputValue    interface{} `json:"inputValue"`
-	DeveloperHint string      `json:"developerHint"`
+	Status int    `json:"status"`
+	Auth   bool   `json:"auth"`
+	Msg    string `json:"msg"`
 }
 
-func (e *Error) UnmarshalJSON(data []byte) error {
-	var str string
-	err := json.Unmarshal(data, &str)
-	if err == nil {
-		e.ErrorMessage = str
-		log.Println("1")
-		return nil
-	}
-
-	type alias Error
-	a := alias(*e)
-	err = json.Unmarshal(data, &a)
-	if err != nil {
-		log.Println("2")
-		return err
-	}
-
-	*e = Error(a)
-	log.Println("3")
-	return nil
-}
-
-func (r Error) Error() string {
-	if r.ErrorCode == "" && r.ErrorMessage != "" {
-		return r.ErrorMessage
-	}
-
-	b, err := json.MarshalIndent(r, "", "  ")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(b)
+func (e Error) Error() string {
+	return string(e.Msg)
 }
 
 func checkContentType(response *http.Response) error {
