@@ -1,4 +1,4 @@
-package economic_test
+package touchoffice_test
 
 import (
 	"encoding/json"
@@ -6,10 +6,9 @@ import (
 	"testing"
 )
 
-func TestJournalsVouchersGet(t *testing.T) {
+func TestClerkList(t *testing.T) {
 	client := client()
-	req := client.NewJournalsVouchersGetRequest()
-	req.PathParams().JournalNumber = 8
+	req := client.NewClerkListRequest()
 
 	resp, err := req.Do()
 	if err != nil {

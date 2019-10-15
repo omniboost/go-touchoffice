@@ -1,4 +1,4 @@
-module github.com/omniboost/go-economic
+module github.com/omniboost/go-touchoffice
 
 go 1.13
 

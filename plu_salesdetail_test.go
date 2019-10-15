@@ -1,4 +1,4 @@
-package economic_test
+package touchoffice_test
 
 import (
 	"encoding/json"

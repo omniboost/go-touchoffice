@@ -1,4 +1,4 @@
-package economic
+package touchoffice
 
 import (
 	"bytes"
@@ -20,19 +20,16 @@ import (
 
 const (
 	libraryVersion = "0.0.1"
-	userAgent      = "go-economic/" + libraryVersion
+	userAgent      = "go-touchoffice/" + libraryVersion
 	mediaType      = "application/json"
 	charset        = "utf-8"
-
-	demoGrantToken  = "demo"
-	demoSecretToken = "demo"
 )
 
 var (
 	BaseURL = url.URL{
 		Scheme: "https",
-		Host:   "restapi.e-conomic.com",
-		Path:   "",
+		Host:   "api.touchoffice.net",
+		Path:   "index.php",
 		// RawQuery: "demo=true",
 	}
 )
@@ -52,8 +49,6 @@ func NewClient(httpClient *http.Client) *Client {
 	client.SetUserAgent(userAgent)
 	client.SetMediaType(mediaType)
 	client.SetCharset(charset)
-	client.SetGrantToken(demoGrantToken)
-	client.SetSecretToken(demoSecretToken)
 
 	return client
 }
@@ -73,8 +68,8 @@ type Client struct {
 	charset               string
 	disallowUnknownFields bool
 
-	grantToken  string
-	secretToken string
+	apiKey            string
+	terminalAccessKey string
 
 	// Optional function called after every successful request made to the DO Clients
 	onRequestCompleted RequestCompletionCallback
@@ -127,20 +122,20 @@ func (c *Client) SetDisallowUnknownFields(disallowUnknownFields bool) {
 	c.disallowUnknownFields = disallowUnknownFields
 }
 
-func (c *Client) SetGrantToken(token string) {
-	c.grantToken = token
+func (c *Client) SetAPIKey(key string) {
+	c.apiKey = key
 }
 
-func (c Client) GrantToken() string {
-	return c.grantToken
+func (c Client) APIKey() string {
+	return c.apiKey
 }
 
-func (c *Client) SetSecretToken(token string) {
-	c.secretToken = token
+func (c *Client) SetTerminalAccessKey(key string) {
+	c.terminalAccessKey = key
 }
 
-func (c Client) SecretToken() string {
-	return c.secretToken
+func (c Client) TerminalAccessKey() string {
+	return c.terminalAccessKey
 }
 
 func (c *Client) GetEndpointURL(relative string, pathParams PathParams) (url.URL, error) {
@@ -207,8 +202,7 @@ func (c *Client) NewRequest(ctx context.Context, method string, URL url.URL, bod
 	req.Header.Add("Content-Type", fmt.Sprintf("%s; charset=%s", c.MediaType(), c.Charset()))
 	req.Header.Add("Accept", c.MediaType())
 	req.Header.Add("User-Agent", c.UserAgent())
-	req.Header.Add("X-AgreementGrantToken", c.GrantToken())
-	req.Header.Add("X-AppSecretToken", c.SecretToken())
+	req.Header.Add("X-API-KEY", c.APIKey())
 
 	return req, nil
 }

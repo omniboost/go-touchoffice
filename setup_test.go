@@ -1,20 +1,20 @@
-package economic_test
+package touchoffice_test
 
 import (
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/omniboost/go-economic"
+	"github.com/omniboost/go-touchoffice"
 )
 
-func client() *economic.Client {
-	grantToken := os.Getenv("GRANT_TOKEN")
-	secretToken := os.Getenv("SECRET_TOKEN")
+func client() *touchoffice.Client {
+	apiKey := os.Getenv("API_KEY")
+	terminalAccessKey := os.Getenv("TERMINAL_ACCESS_KEY")
 
-	client := economic.NewClient(nil)
+	client := touchoffice.NewClient(nil)
 	client.SetDebug(true)
 	client.SetDisallowUnknownFields(true)
-	client.SetGrantToken(grantToken)
-	client.SetSecretToken(secretToken)
+	client.SetAPIKey(apiKey)
+	client.SetTerminalAccessKey(terminalAccessKey)
 	return client
 }
