@@ -5,111 +5,43 @@ import (
 	"net/url"
 )
 
-func (c *Client) NewAccountsGetRequest() AccountsGetRequest {
-	return AccountsGetRequest{
+func (c *Client) NewPLUSalesdetailRequest() PLUSalesdetailRequest {
+	return PLUSalesdetailRequest{
 		client:      c,
-		queryParams: c.NewAccountsGetQueryParams(),
-		pathParams:  c.NewAccountsGetPathParams(),
+		queryParams: c.NewPLUSalesdetailQueryParams(),
+		pathParams:  c.NewPLUSalesdetailPathParams(),
 		method:      http.MethodGet,
 		headers:     http.Header{},
-		requestBody: c.NewAccountsGetRequestBody(),
+		requestBody: c.NewPLUSalesdetailRequestBody(),
 	}
 }
 
-type AccountsGetRequest struct {
+type PLUSalesdetailRequest struct {
 	client      *Client
-	queryParams *AccountsGetQueryParams
-	pathParams  *AccountsGetPathParams
+	queryParams *PLUSalesdetailQueryParams
+	pathParams  *PLUSalesdetailPathParams
 	method      string
 	headers     http.Header
-	requestBody AccountsGetRequestBody
+	requestBody PLUSalesdetailRequestBody
 }
 
-func (c *Client) NewAccountsGetQueryParams() *AccountsGetQueryParams {
-	return &AccountsGetQueryParams{}
-}
-
-type AccountsGetQueryParams struct {
-	// https://restdocs.e-conomic.com/#pagination
-	SkipPages int `schema:"skippages,omitempty"`
-	PageSize  int `schema:"pagesize,omitempty"`
-	// https://restdocs.e-conomic.com/#filtering
-	// Filterable properties: accountNumber, accountType, balance, barred, blockDirectEntries, debitCredit, name
-	Filter string `schema:"filter,omitempty"`
-	// https://restdocs.e-conomic.com/#sorting
-	Sort string `schema:"sort,omitempty"`
-}
-
-func (r AccountsGetRequest) RequiredProperties() []string {
-	return []string{
-		"attention.self",
-		"currency",
-		"customerContact.self",
-		"customerGroup",
-		"customerGroup.self",
-		"defaultDeliveryLocation.self",
-		"invoices.self",
-		"layout.self",
-		"name",
-		"paymentTerms",
-		"paymentTerms.self",
-		"salesPerson.self",
-		"self",
-		"templates.self",
-		"totals.self",
-		"vatZone",
-		"vatZone.self",
+func (c *Client) NewPLUSalesdetailQueryParams() *PLUSalesdetailQueryParams {
+	return &PLUSalesdetailQueryParams{
+		TAK: c.TerminalAccessKey(),
 	}
 }
 
-func (r AccountsGetRequest) FilterableProperties() []string {
-	return []string{
-		"address",
-		"balance",
-		"barred",
-		"city",
-		"corporateIdentificationNumber",
-		"country",
-		"creditLimit",
-		"currency",
-		"customerNumber",
-		"ean",
-		"email",
-		"lastUpdated",
-		"mobilePhone",
-		"name",
-		"publicEntryNumber",
-		"telephoneAndFaxNumber",
-		"vatNumber",
-		"website",
-		"zip",
-	}
+type PLUSalesdetailQueryParams struct {
+	TAK       string
+	Site      int  `schema:"site"`
+	DateStart Date `schema:"date_start,omitempty"`
+	TimeStart Time `schema:"time_start,omitempty"`
+	DateEnd   Date `schema:"date_end,omitempty"`
+	TimeEnd   Time `schema:"time_end,omitempty"`
+	Sale      int  `schema:"sale,omitempty"`
 }
 
-func (r AccountsGetRequest) SortableProperties() []string {
-	return []string{
-		"address",
-		"balance",
-		"city",
-		"corporateIdentificationNumber",
-		"country",
-		"creditLimit",
-		"currency",
-		"customerNumber",
-		"ean",
-		"email",
-		"lastUpdated",
-		"mobilePhone",
-		"name",
-		"publicEntryNumber",
-		"telephoneAndFaxNumber",
-		"vatNumber",
-		"website",
-		"zip",
-	}
-}
-
-func (p AccountsGetQueryParams) ToURLValues() (url.Values, error) {
+func (p PLUSalesdetailQueryParams) ToURLValues() (url.Values, error) {
 	encoder := newSchemaEncoder()
 	params := url.Values{}
 
@@ -121,80 +53,61 @@ func (p AccountsGetQueryParams) ToURLValues() (url.Values, error) {
 	return params, nil
 }
 
-func (r *AccountsGetRequest) QueryParams() *AccountsGetQueryParams {
+func (r *PLUSalesdetailRequest) QueryParams() *PLUSalesdetailQueryParams {
 	return r.queryParams
 }
 
-func (c *Client) NewAccountsGetPathParams() *AccountsGetPathParams {
-	return &AccountsGetPathParams{}
+func (c *Client) NewPLUSalesdetailPathParams() *PLUSalesdetailPathParams {
+	return &PLUSalesdetailPathParams{}
 }
 
-type AccountsGetPathParams struct {
+type PLUSalesdetailPathParams struct {
 }
 
-func (p *AccountsGetPathParams) Params() map[string]string {
+func (p *PLUSalesdetailPathParams) Params() map[string]string {
 	return map[string]string{}
 }
 
-func (r *AccountsGetRequest) PathParams() *AccountsGetPathParams {
+func (r *PLUSalesdetailRequest) PathParams() *PLUSalesdetailPathParams {
 	return r.pathParams
 }
 
-func (r *AccountsGetRequest) SetMethod(method string) {
+func (r *PLUSalesdetailRequest) SetMethod(method string) {
 	r.method = method
 }
 
-func (r *AccountsGetRequest) Method() string {
+func (r *PLUSalesdetailRequest) Method() string {
 	return r.method
 }
 
-func (s *Client) NewAccountsGetRequestBody() AccountsGetRequestBody {
-	return AccountsGetRequestBody{}
+func (s *Client) NewPLUSalesdetailRequestBody() PLUSalesdetailRequestBody {
+	return PLUSalesdetailRequestBody{}
 }
 
-type AccountsGetRequestBody struct {
+type PLUSalesdetailRequestBody struct {
 }
 
-func (r *AccountsGetRequest) RequestBody() *AccountsGetRequestBody {
+func (r *PLUSalesdetailRequest) RequestBody() *PLUSalesdetailRequestBody {
 	return &r.requestBody
 }
 
-func (r *AccountsGetRequest) SetRequestBody(body AccountsGetRequestBody) {
+func (r *PLUSalesdetailRequest) SetRequestBody(body PLUSalesdetailRequestBody) {
 	r.requestBody = body
 }
 
-func (r *AccountsGetRequest) NewResponseBody() *AccountsGetResponseBody {
-	return &AccountsGetResponseBody{}
+func (r *PLUSalesdetailRequest) NewResponseBody() *PLUSalesdetailResponseBody {
+	return &PLUSalesdetailResponseBody{}
 }
 
-type AccountsGetResponseBody struct {
-	Collection []struct {
-		AccountNumber      int     `json:"accountNumber"`
-		AccountType        string  `json:"accountType"`
-		Balance            float64 `json:"balance"`
-		BlockDirectEntries bool    `json:"blockDirectEntries"`
-		DebitCredit        string  `json:"debitCredit"`
-		Name               string  `json:"name"`
-		AccountingYears    string  `json:"accountingYears"`
-		Self               string  `json:"self"`
-		VatAccount         struct {
-			VatCode string `json:"vatCode"`
-			Self    string `json:"self"`
-		} `json:"vatAccount,omitempty"`
-		TotalFromAccount struct {
-			AccountNumber int    `json:"accountNumber"`
-			Self          string `json:"self"`
-		} `json:"totalFromAccount,omitempty"`
-	} `json:"collection"`
-	Pagination Pagination `json:"pagination"`
-	Self       string     `json:"self"`
+type PLUSalesdetailResponseBody struct {
+	SalesList
 }
 
-func (r *AccountsGetRequest) URL() (url.URL, error) {
-	return r.client.GetEndpointURL("accounts", r.PathParams())
+func (r *PLUSalesdetailRequest) URL() (url.URL, error) {
+	return r.client.GetEndpointURL("sales/PLUsalesdetail", r.PathParams())
 }
 
-func (r *AccountsGetRequest) Do() (AccountsGetResponseBody, error) {
+func (r *PLUSalesdetailRequest) Do() (PLUSalesdetailResponseBody, error) {
 	u, err := r.URL()
 	if err != nil {
 		return *r.NewResponseBody(), err

@@ -94,6 +94,7 @@ func (r *ClerkListRequest) NewResponseBody() *ClerkListResponseBody {
 }
 
 type ClerkListResponseBody struct {
+	ClerkList
 }
 
 func (r *ClerkListRequest) URL() (url.URL, error) {

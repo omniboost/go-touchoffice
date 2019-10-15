@@ -164,10 +164,6 @@ func (c *Client) GetEndpointURL(relative string, pathParams PathParams) (url.URL
 	buf := new(bytes.Buffer)
 	params := pathParams.Params()
 
-	for k, v := range params {
-		params[k] = QueryEscape(v)
-	}
-
 	err = tmpl.Execute(buf, params)
 	if err != nil {
 		return clientURL, err
@@ -202,7 +198,8 @@ func (c *Client) NewRequest(ctx context.Context, method string, URL url.URL, bod
 	req.Header.Add("Content-Type", fmt.Sprintf("%s; charset=%s", c.MediaType(), c.Charset()))
 	req.Header.Add("Accept", c.MediaType())
 	req.Header.Add("User-Agent", c.UserAgent())
-	req.Header.Add("X-API-KEY", c.APIKey())
+	// req.Header.Add("X-API-KEY", c.APIKey())
+	req.Header["X-API-KEY"] = append(req.Header["X-API-KEY"], c.APIKey())
 
 	return req, nil
 }

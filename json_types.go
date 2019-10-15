@@ -44,6 +44,10 @@ func (d Date) IsEmpty() bool {
 	return d.Time.IsZero()
 }
 
+func (d Date) MarshalSchema() string {
+	return d.Format("2006-01-02")
+}
+
 type DateTime struct {
 	time.Time
 }
@@ -137,19 +141,19 @@ func (b Bool) MarshalSchema() string {
 	return "false"
 }
 
-type LogTime struct {
+type Time struct {
 	time.Time
 }
 
-func (l *LogTime) MarshalJSON() ([]byte, error) {
-	if l.Time.IsZero() {
+func (t *Time) MarshalJSON() ([]byte, error) {
+	if t.Time.IsZero() {
 		return json.Marshal(nil)
 	}
 
-	return json.Marshal(l.Time)
+	return json.Marshal(t.Time)
 }
 
-func (l *LogTime) UnmarshalJSON(text []byte) (err error) {
+func (t *Time) UnmarshalJSON(text []byte) (err error) {
 	var value string
 	err = json.Unmarshal(text, &value)
 	if err != nil {
@@ -161,15 +165,15 @@ func (l *LogTime) UnmarshalJSON(text []byte) (err error) {
 	}
 
 	// first try standard date
-	l.Time, err = time.Parse(time.RFC3339, value)
+	t.Time, err = time.Parse(time.RFC3339, value)
 	if err == nil {
 		return nil
 	}
 
-	l.Time, err = time.Parse("2006-01-02T15:04:05", value)
+	t.Time, err = time.Parse("2006-01-02T15:04:05", value)
 	return err
 }
 
-func (l LogTime) MarshalSchema() string {
-	return l.Format("2006-01-02T15:04:05")
+func (t Time) MarshalSchema() string {
+	return t.Format("15:04")
 }

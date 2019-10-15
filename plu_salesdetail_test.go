@@ -4,11 +4,24 @@ import (
 	"encoding/json"
 	"log"
 	"testing"
+	"time"
+
+	"github.com/omniboost/go-touchoffice"
 )
 
-func TestAccountsGet(t *testing.T) {
+func TestPLUSalesdetail(t *testing.T) {
 	client := client()
-	req := client.NewAccountsGetRequest()
+	req := client.NewPLUSalesdetailRequest()
+	yesterday := time.Now().AddDate(0, 0, -1)
+	yesterday = time.Date(yesterday.Year(), yesterday.Month(), yesterday.Day(), 0, 0, 0, 0, yesterday.Location())
+	today := time.Now()
+	today = time.Date(today.Year(), today.Month(), today.Day(), 0, 0, 0, 0, today.Location())
+
+	req.QueryParams().Site = 1
+	req.QueryParams().DateStart = touchoffice.Date{yesterday}
+	req.QueryParams().TimeStart = touchoffice.Time{yesterday}
+	req.QueryParams().DateEnd = touchoffice.Date{today}
+	req.QueryParams().TimeEnd = touchoffice.Time{today}
 
 	resp, err := req.Do()
 	if err != nil {
