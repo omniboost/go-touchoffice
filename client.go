@@ -370,8 +370,17 @@ type ErrorResponse struct {
 }
 
 func (r *ErrorResponse) UnmarshalJSON(data []byte) error {
-	r.Err = &Error{}
-	return json.Unmarshal(data, r.Err)
+	err := &Error{}
+	err2 := json.Unmarshal(data, err)
+	if err2 != nil {
+		return err2
+	}
+
+	if err.Error() != "" {
+		r.Err = err
+	}
+
+	return nil
 }
 
 func (r ErrorResponse) Error() string {
