@@ -5,8 +5,6 @@ import (
 	"log"
 	"testing"
 	"time"
-
-	"github.com/omniboost/go-touchoffice"
 )
 
 func TestPLUSalesdetail(t *testing.T) {
@@ -18,10 +16,12 @@ func TestPLUSalesdetail(t *testing.T) {
 	today = time.Date(today.Year(), today.Month(), today.Day(), 0, 0, 0, 0, today.Location())
 
 	req.QueryParams().Site = 1
-	req.QueryParams().DateStart = touchoffice.Date{yesterday}
-	req.QueryParams().TimeStart = touchoffice.Time{yesterday}
-	req.QueryParams().DateEnd = touchoffice.Date{today}
-	req.QueryParams().TimeEnd = touchoffice.Time{today}
+	req.QueryParams().SetStart(yesterday)
+	req.QueryParams().SetEnd(today)
+	// req.QueryParams().DateStart = touchoffice.Date{yesterday}
+	// req.QueryParams().TimeStart = touchoffice.Time{yesterday}
+	// req.QueryParams().DateEnd = touchoffice.Date{today}
+	// req.QueryParams().TimeEnd = touchoffice.Time{today}
 
 	resp, err := req.Do()
 	if err != nil {

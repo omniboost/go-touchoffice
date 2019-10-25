@@ -3,6 +3,7 @@ package touchoffice
 import (
 	"net/http"
 	"net/url"
+	"time"
 )
 
 func (c *Client) NewPLUSalesdetailRequest() PLUSalesdetailRequest {
@@ -39,6 +40,16 @@ type PLUSalesdetailQueryParams struct {
 	DateEnd   Date `schema:"date_end,omitempty"`
 	TimeEnd   Time `schema:"time_end,omitempty"`
 	Sale      int  `schema:"sale,omitempty"`
+}
+
+func (p *PLUSalesdetailQueryParams) SetStart(t time.Time) {
+	p.DateStart = Date{t}
+	p.TimeStart = Time{t}
+}
+
+func (p *PLUSalesdetailQueryParams) SetEnd(t time.Time) {
+	p.DateEnd = Date{t}
+	p.TimeEnd = Time{t}
 }
 
 func (p PLUSalesdetailQueryParams) ToURLValues() (url.Values, error) {
