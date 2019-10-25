@@ -1,8 +1,8 @@
 package touchoffice
 
 type PLUList2 struct {
-	Product Products `json:"products"`
-	Status  int      `json:"status"`
+	Products Products `json:"products"`
+	Status   int      `json:"status"`
 }
 
 type Products []Product
