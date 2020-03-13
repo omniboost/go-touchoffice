@@ -3,6 +3,7 @@ package touchoffice
 import (
 	"net/http"
 	"net/url"
+	"time"
 )
 
 func (c *Client) NewReceiptsRequest() ReceiptsRequest {
@@ -39,6 +40,16 @@ type ReceiptsQueryParams struct {
 	DateEnd   Date `schema:"date_end,omitempty"`
 	TimeEnd   Time `schema:"time_end,omitempty"`
 	Sale      int  `schema:"sale,omitempty"`
+}
+
+func (p *ReceiptsQueryParams) SetStart(t time.Time) {
+	p.DateStart = Date{t}
+	p.TimeStart = Time{t}
+}
+
+func (p *ReceiptsQueryParams) SetEnd(t time.Time) {
+	p.DateEnd = Date{t}
+	p.TimeEnd = Time{t}
 }
 
 func (p ReceiptsQueryParams) ToURLValues() (url.Values, error) {
@@ -100,11 +111,11 @@ func (r *ReceiptsRequest) NewResponseBody() *ReceiptsResponseBody {
 }
 
 type ReceiptsResponseBody struct {
-	SalesList
+	ReceiptsList
 }
 
 func (r *ReceiptsRequest) URL() (url.URL, error) {
-	return r.client.GetEndpointURL("sales/PLUsalesdetail", r.PathParams())
+	return r.client.GetEndpointURL("receiptsAndBills/receipts", r.PathParams())
 }
 
 func (r *ReceiptsRequest) Do() (ReceiptsResponseBody, error) {
